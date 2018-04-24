@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Research Project</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Jessyca Campos" />
+    <meta name="date" content="2018-04-24" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Research Project
+### Jessyca Campos
+### April 24, 2018
+
+---
+
+
+
+
+## Research Questions
+The present study looks at acquisition of Spanish stress by L2 learners of Spanish. We're interested in seeing if syllable weight affects the perception of stress placement by second language learners of Spanish when the suprasegmental features that indicate stress are neutralized.
+
+How do second language learners decide where to place lexical stress in the absence of the acoustic cues that allow them to perceive stress?
+
+- H1: In the absense of acoustic cues L2 learners will depend on syllable weight to indentify the stressed syllable. 
+
+---
+
+# Continued
+- We expect the language learner to begin to comply with unmarked stress patterns in Spanish as proficiency in the L2 increases.The unmarked stress pattern in Spanish is the pattern that native speakers and advanced L2 speakers default to when perceiving stress in Spanish.
+
+Unmarked Spanish stress rules:
+- **default**: Stress the penultimate syllable in words that end in a vowel, -n, or -s (paroxytone)
+- Stress the final syllable in words that end in any consonant except -n or -s (oxytone)
+- words in which stress falls on the antepenultimate syllable are always marked with orthographic stress.
+
+---
+
+## The Study
+68 participants were asked to take part in a perception experiment
+
+In order to examine whether syllable weight influences the perception of Spanish stress placement, an experiment was designed in which disyllabic nonce words were created and manipulated in Praat (fafa and fafal). 
+
+The participants were presented the auditory stimulus and asked to determine the syllable they believed to be stressed.
+
+To ensure that suprasegmental features such as duration and intensity weren't influencing perception they were neutralized. Intensity = 0 and duration = 0.
+
+Before beginning the perception experiment all participants took a proficiency test.
+
+The predictors in this study are proficiency and condition.
+The criterion is the proportion of oxytone responses.
+
+---
+
+## Load the dataset
+
+
+```r
+library(tidyverse)
+
+fafa_df &lt;- read_csv("../data/data.csv")
+```
+
+```r
+head(fafa_df)
+```
+
+```
+## # A tibble: 6 x 4
+##   proficiency condition propOxytone    id
+##         &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;int&gt;
+## 1      -10.0  fafa            0.402     1
+## 2       -8.96 fafa            0.457     2
+## 3       -7.91 fafa            0.402     3
+## 4       -6.87 fafa            0.555     4
+## 5       -5.82 fafa            0.485     5
+## 6       -4.78 fafa            0.422     6
+```
+
+---
+
+## Center the data
+
+```r
+fafa_c &lt;- fafa_df %&gt;%
+  mutate(., proficiency_c = proficiency - mean(proficiency))
+head(fafa_c)
+```
+
+```
+## # A tibble: 6 x 5
+##   proficiency condition propOxytone    id proficiency_c
+##         &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;int&gt;         &lt;dbl&gt;
+## 1      -10.0  fafa            0.402     1         -35.0
+## 2       -8.96 fafa            0.457     2         -34.0
+## 3       -7.91 fafa            0.402     3         -32.9
+## 4       -6.87 fafa            0.555     4         -31.9
+## 5       -5.82 fafa            0.485     5         -30.8
+## 6       -4.78 fafa            0.422     6         -29.8
+```
+
+---
+#Plot:
+
+![](index_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+
+# Models
+
+```r
+mod_null &lt;- glm(propOxytone ~ 1, 
+              data = fafa_c,                            
+              family = gaussian(link = "identity"))
+
+mod_prof &lt;- glm(propOxytone ~ proficiency_c,
+              data = fafa_c,                            
+              family = gaussian(link = "identity"))
+
+mod_cond &lt;- glm(propOxytone ~ condition,
+              data = fafa_c,                            
+              family = gaussian(link = "identity"))
+
+mod_add &lt;- glm(propOxytone ~ proficiency_c + condition,
+              data = fafa_c,                            
+              family = gaussian(link = "identity"))
+
+mod_int &lt;- glm(propOxytone ~ proficiency_c + condition + proficiency_c:condition,
+              data = fafa_c,                            
+              family = gaussian(link = "identity"))
+```
+
+---
+
+
+```r
+anova(mod_null, mod_prof, mod_cond, mod_add, mod_int, test ="Chisq")
+```
+
+```
+## Analysis of Deviance Table
+## 
+## Model 1: propOxytone ~ 1
+## Model 2: propOxytone ~ proficiency_c
+## Model 3: propOxytone ~ condition
+## Model 4: propOxytone ~ proficiency_c + condition
+## Model 5: propOxytone ~ proficiency_c + condition + proficiency_c:condition
+##   Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+## 1       135    2.84096                          
+## 2       134    2.51326  1   0.3277 &lt; 2.2e-16 ***
+## 3       134    1.46578  0   1.0475              
+## 4       133    1.13807  1   0.3277 &lt; 2.2e-16 ***
+## 5       132    0.36247  1   0.7756 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Testing the interaction of proficiency x condition
+
+```r
+anova(mod_add, mod_int, test ="Chisq")
+```
+
+```
+## Analysis of Deviance Table
+## 
+## Model 1: propOxytone ~ proficiency_c + condition
+## Model 2: propOxytone ~ proficiency_c + condition + proficiency_c:condition
+##   Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+## 1       133    1.13807                          
+## 2       132    0.36247  1   0.7756 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Model diagnostics
+1. Checked for linearity
+
+2. The mean of residuals is 0
+
+```r
+ # mean(mod_int$residuals)
+```
+---
+No autocorrelation of residuals
+
+```r
+ acf(mod_int$residuals)
+```
+
+![](index_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+```r
+# lmtest::dwtest(mod_int)
+```
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

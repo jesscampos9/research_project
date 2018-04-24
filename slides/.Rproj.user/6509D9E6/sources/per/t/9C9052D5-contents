@@ -1,0 +1,78 @@
+---
+title: "GLM"
+subtitle: "Poisson regression"
+author: "Your Name"
+date: "2018/04/17"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+# Read R scripts into .Rmd file
+
+- We can load R scripts into our HTML presentation
+
+```{r, 'source_libs', message = FALSE}
+source("../scripts/libs.R")
+```
+
+- Take note of the path. Where does `libs.R` live? inside of the scripts folder 
+- Where does this presentation live? inside the slides folder
+
+- How can we load the `poisson_regression.R` script into this presentation so 
+that we have access to our models/plots and other objects?
+
+```{r, 'source_script', message = FALSE}
+source("../scripts/poisson_regression.R")
+```
+
+---
+
+# model summary test
+
+``` {r, 'model_output'}
+summary(mod_int)
+```
+
+---
+
+.pull-left[
+- lists
+- of
+- things
+]
+
+.pull-right[
+```{r, 'plot', fig.height=10}
+
+poisson_reg
+```
+]
+
+---
+
+
+![]("../figs/poisson_plot.png")
+```{r}
+int_test
+```
+
+
+
+
+
+
+
+
+
+
+
+

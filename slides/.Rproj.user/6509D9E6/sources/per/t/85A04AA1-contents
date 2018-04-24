@@ -1,0 +1,79 @@
+
+library(tidyverse)
+# here("data", "poisson_data.csv")
+
+# 1. load data
+
+ mydf <- read_csv("./data/poisson_data.csv") %>%
+  mutate(., temp_c = temp - mean(temp))
+
+# load data with here()
+# mydf <- read_csv(here("data", "poisson_data.csv")) %>%
+ #   mutate(., temp_c = temp - mean(temp))
+
+# 2. check structure
+
+str(mydf)
+head(mydf)
+glimpse(mydf)
+
+# 3. fit inclusive and nested models
+#    test for interactions/main effects
+
+mod_null <- glm(units ~ 1,
+               data = mydf,
+               family = poisson(link = "log"))
+mod_temp <- glm(units ~ 1 + temp_c,
+               data = mydf,
+               family = poisson(link = "log"))
+mod_city <- glm(units ~ 1 + city,
+               data = mydf,
+               family = poisson(link = "log"))
+mod_add <- glm(units ~ 1 + temp_c + city,
+               data = mydf,
+               family = poisson(link = "log"))
+mod_int <- glm(units ~ 1 + temp_c * city,
+               data = mydf,
+               family = poisson(link = "log"))
+
+anova(mod_null, mod_temp, mod_city, mod_add, mod_int)
+
+# x + z + x:z == x * z
+
+#main effect of temp
+anova(mod_null, mod_temp, test ="Chisq") #yes
+
+#main effect of city
+anova(mod_null, mod_city, test ="Chisq") #yes
+
+#interaction
+int_test <- anova(mod_add, mod_int, test = "Chisq") #yes 
+
+
+# 4. summary of best model
+
+summary(mod_int)
+# intercept of the plot is log of when NYC = 0 
+# something like that
+
+exp(coef(mod_int)[2]) # 4% increase
+exp(coef(mod_int)[3]) # 65% decrease at mean temp?
+1 - exp(coef(mod_int)[2] + coef(mod_int)[4])
+
+# 5. write up of output
+
+
+
+# 6. generate and save plot
+
+poisson_reg <- ggplot(mydf, aes(x = temp_c, y = units, color = city)) + 
+  geom_point(pch = 21) +
+  geom_smooth(method = glm,
+              method.args = list(family = "poisson"))
+
+# ggsave(filename = "./figs/poisson_plot.png",
+#       plot = poisson_reg,
+#       width = 10, height = 4, 
+#       unit = "in")
+
+

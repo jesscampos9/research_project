@@ -1,0 +1,8 @@
+"0","df_tidy %>% 
+  group_by(., age) %>% 
+  summarize(prof_mean = mean(prof), prof_sd = sd(prof), 
+            comp_mean = mean(composite_score), comp_sd = sd(composite_score)) %>% 
+  knitr::kable(., format = 'markdown')
+"
+"2","Error in eval(lhs, parent, parent) : object 'df_tidy' not found
+"

@@ -1,0 +1,88 @@
+---
+title: "Mid-term examples - pa5"
+author: "Joseph Casillas"
+date: "4/2/2018"
+output: 
+  html_document: 
+    theme: spacelab
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load data
+
+```{r, 'load_data', message=FALSE}
+# Load tidy verse
+library(tidyverse)
+
+# Load data
+df_raw <- read_csv("./data_raw/pa_5_data/lang_data_raw.csv")
+
+# Check structure
+glimpse(df_raw)
+
+# Print first 6 rows
+head(df_raw)
+```
+
+## Tidy data
+
+```{r, 'tidy_data'}
+df_tidy <- df_raw %>% 
+  separate(., id, into = c('id', 'gender', 'age'), sep = '_') %>%  # separate id column
+  mutate(., composite_score = log(iq / 80) + log(motivation),      # create composite_score
+            composite_c = composite_score - mean(composite_score), # center it
+            age_sum = if_else(age == 'younger', 1, -1))            # sum contrasts
+```
+
+## Descriptives
+
+```{r, 'descriptives'}
+df_tidy %>% 
+  group_by(., age) %>% 
+  summarize(prof_mean = mean(prof), prof_sd = sd(prof), 
+            comp_mean = mean(composite_score), comp_sd = sd(composite_score)) %>% 
+  knitr::kable(., format = 'markdown')
+```
+
+## Plot
+
+```{r, 'plot', fig.retina=2, fig.align='center', fig.width=8}
+df_tidy %>% 
+  ggplot(., aes(x = composite_c, y = prof, color = age)) + 
+    geom_hline(yintercept = 0.60205, lty = 2, size = 0.25, color = "grey60") + # from fitted model below
+    geom_vline(xintercept = 0, lty = 2, size = 0.25, color = "grey60") +       # from fitted model below
+    geom_point() + 
+    geom_smooth(method = lm, se = F, fullrange = T) + 
+    geom_abline(intercept = 0.60205, slope = 0.67977, lty = 3) + # from fitted model below
+    scale_color_brewer(palette = "Set2") + 
+    theme_test(base_size = 16, base_family = 'Times')
+```
+
+## Fit models
+
+```{r, 'mod'}
+my_mod_inc <- lm(prof ~ composite_score * age, data = df_tidy)  # inclusive model
+my_mod_add <- lm(prof ~ composite_score + age, data = df_tidy)  # nested model, add
+my_mod_age <- lm(prof ~ composite_score, data = df_tidy)        # nested model, no age
+my_mod_com <- lm(prof ~ age, data = df_tidy)                    # nested model, no comp
+my_mod_nul <- lm(prof ~ 1, data = df_tidy)                      # null model
+
+# model comparisons
+anova(my_mod_inc, my_mod_add) # test int
+anova(my_mod_add, my_mod_age) # test age
+anova(my_mod_add, my_mod_com) # test comp
+
+# summary of best model
+summary(my_mod_inc) 
+```
+
+## Centered model with sum contrasts
+
+```{r, 'mod_c'}
+my_modc <- lm(prof ~ composite_c * age_sum, data = df_tidy)
+summary(my_modc)
+```
