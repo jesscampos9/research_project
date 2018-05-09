@@ -1,0 +1,12 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics[width=450px,height=350px]{../figs/span_stress6x4}
+
+}
+
+\caption{ }\label{fig:unnamed-chunk-1}
+\end{figure*}
+\efloatseparator
+ 

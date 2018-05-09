@@ -1,0 +1,4 @@
+"0","source(""../scripts/poisson_regression.R"")
+"
+"2","Error: './data/poisson_data.csv' does not exist in current working directory ('/Users/jesscampos/School/Rutgers/Spring 2018/Data Science for Linguists/class resources /glm_poisson/manuscript').
+"

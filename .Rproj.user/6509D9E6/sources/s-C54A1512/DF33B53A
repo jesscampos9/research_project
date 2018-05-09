@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1525899269237.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "DF33B53A",
+    "lastKnownWriteTime" : 1525899191,
+    "last_content_update" : 1525899191,
+    "path" : "~/Desktop/research_project/slides/index.Rmd",
+    "project_path" : "slides/index.Rmd",
+    "properties" : {
+        "cursorPosition" : "21,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
