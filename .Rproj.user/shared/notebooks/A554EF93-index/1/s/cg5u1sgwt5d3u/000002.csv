@@ -1,0 +1,7 @@
+"0","df_raw %>% 
+  separate(., id, into = c('id', 'gender', 'age'), sep = '_') %>%  # separate id column
+  mutate(., composite_score = log(iq / 80) + log(motivation),      # create composite_score
+            composite_c = composite_score - mean(composite_score), # center it
+            age_sum = if_else(age == 'younger', 1, -1)) 
+"
+"2","package ‘bindrcpp’ was built under R version 3.4.4"

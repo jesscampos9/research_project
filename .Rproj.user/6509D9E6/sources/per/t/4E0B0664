@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1525899723937.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1599723008",
+    "id" : "4E0B0664",
+    "lastKnownWriteTime" : 1525908428,
+    "last_content_update" : 1525908428350,
+    "path" : "~/Desktop/research_project/scripts/rp_test.R",
+    "project_path" : "scripts/rp_test.R",
+    "properties" : {
+        "cursorPosition" : "84,65",
+        "scrollLine" : "57",
+        "source_window_id" : "wtfq9ha962yh3"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

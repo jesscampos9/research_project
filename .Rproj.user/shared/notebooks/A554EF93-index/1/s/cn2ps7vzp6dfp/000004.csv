@@ -1,0 +1,13 @@
+"0","df_tidy %>% 
+  ggplot(., aes(x = composite_c, y = prof, color = age)) + 
+    geom_hline(yintercept = 0.60205, lty = 2, size = 0.25, color = ""grey60"") + # from fitted model below
+    geom_vline(xintercept = 0, lty = 2, size = 0.25, color = ""grey60"") +       # from fitted model below
+    geom_point() + 
+    geom_smooth(method = lm, se = F, fullrange = T) + 
+    geom_abline(intercept = 0.60205, slope = 0.67977, lty = 3) + # from fitted model below
+    scale_color_brewer(palette = ""Set2"") + 
+    theme_test(base_size = 16, base_family = 'Times')
+"
+"2","Error in theme_test(base_size = 16, base_family = ""Times"") : 
+  could not find function ""theme_test""
+"
